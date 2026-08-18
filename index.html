@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Script WA Anti Hit & Run MUA - Cuantik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#1B0F1F;
+    --bg-panel:#251320;
+    --line:#3E2438;
+    --magenta:#FF4D8D;
+    --gold:#FFC857;
+    --text:#F5EDE9;
+    --text-muted:#B8A2AF;
+    --good:#7CE0B8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; padding:20px 16px 60px;
+    background:var(--bg-deep); color:var(--text);
+    font-family:'Plus Jakarta Sans', sans-serif;
+    display:flex; justify-content:center;
+  }
+  .app{width:100%; max-width:440px;}
+  h1{
+    font-family:'Playfair Display', serif; font-style:italic;
+    color:var(--gold); text-align:center; font-size:2rem; margin:0 0 4px;
+  }
+  .tagline{text-align:center; color:var(--text-muted); font-size:0.85rem; margin-bottom:20px;}
+  
+  .card{
+    background:var(--bg-panel); border:1px solid var(--line);
+    border-radius:18px; padding:18px; margin-bottom:14px;
+  }
+  .card h2{font-size:1rem; color:var(--gold); margin:0 0 12px;}
+  
+  .field{margin-bottom:10px;}
+  .field label{display:block; font-size:0.8rem; font-weight:600; margin-bottom:4px;}
+  input, select, textarea{
+    width:100%; background:var(--bg-deep); border:1px solid var(--line);
+    color:var(--text); padding:9px 12px; border-radius:10px; font-size:0.88rem; outline:none;
+    font-family:'Plus Jakarta Sans', sans-serif;
+  }
+  input:focus, select:focus{border-color:var(--magenta);}
+
+  .script-preview{
+    background:#120914; border:1px solid var(--line);
+    border-radius:12px; padding:14px; font-size:0.85rem; line-height:1.5;
+    white-space:pre-wrap; color:#e2d5de; margin-top:10px; max-height:220px; overflow-y:auto;
+  }
+
+  .btn-copy{
+    width:100%; padding:12px; border-radius:12px; border:none;
+    background:linear-gradient(100deg, var(--gold), var(--magenta));
+    color:var(--bg-deep); font-weight:700; font-size:0.9rem; cursor:pointer; margin-top:10px;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  .toast{
+    display:none; text-align:center; color:var(--good); font-size:0.8rem;
+    font-weight:600; margin-top:8px;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <h1>Cuantik Auto-WA</h1>
+  <p class="tagline">Script Balas Chat MUA Anti Hit & Run</p>
+
+  <div class="card">
+    <h2>1. Data Klien & MUA</h2>
+    <div class="field">
+      <label>Nama MUA / Brand</label>
+      <input type="text" id="namaMua" value="GlowBySiti MUA" oninput="updateScript()">
+    </div>
+    <div class="field">
+      <label>Nama Calon Pengantin</label>
+      <input type="text" id="namaKlien" placeholder="Contoh: Kak Rina" oninput="updateScript()">
+    </div>
+    <div class="field">
+      <label>Tanggal / Lokasi Acara</label>
+      <input type="text" id="detailAcara" placeholder="Contoh: 24 Oktober di Bandung" oninput="updateScript()">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>2. Pilih Situasi Chat</h2>
+    <div class="field">
+      <label>Kondisi Percakapan</label>
+      <select id="skenarioSelect" onchange="updateScript()">
+        <option value="salam">1. Menyapa & Cek Ketersediaan Slot</option>
+        <option value="pricelist">2. Kirim Price List + Edukasi Value</option>
+        <option value="followup">3. Follow-Up H+1 (Klien Cuma Read Doang)</option>
+        <option value="tawar">4. Klien Minta Diskon / Kemahalan</option>
+        <option value="booking">5. Menutup Transaksi & Instruksi DP</option>
+      </select>
+    </div>
+
+    <label style="font-size:0.8rem; font-weight:600;">Pratinjau Pesan WA:</label>
+    <div class="script-preview" id="scriptBox"></div>
+    
+    <button type="button" class="btn-copy" onclick="copyText()">📋 Salin Teks ke WhatsApp</button>
+    <div class="toast" id="toastMsg">✓ Teks berhasil disalin! Tinggal paste di WA.</div>
+  </div>
+</div>
+
+<script>
+  function updateScript() {
+    const mua = document.getElementById('namaMua').value || '[Nama MUA]';
+    const klien = document.getElementById('namaKlien').value || 'Kak';
+    const acara = document.getElementById('detailAcara').value || '[Tanggal/Lokasi]';
+    const skenario = document.getElementById('skenarioSelect').value;
+
+    let teks = '';
+
+    if (skenario === 'salam') {
+      teks = `Halo ${klien}! ✨\n\nTerima kasih banyak sudah menghubungi ${mua}.\n\nBoleh diinfokan untuk acara tanggal berapa dan lokasinya di mana ya ${klien}? Biar langsung Siti cekkan ketersediaan slot jadwal MUA-nya 🥰`;
+    } 
+    else if (skenario === 'pricelist') {
+      teks = `Halo ${klien}! ✨\n\nUntuk tanggal ${acara}, slot jadwalnya *MASIH TERSEDIA* ya Kak 🥰\n\nBerikut Siti lampirkan Price List & Katalog Layanan kami.\n\nFyi ${klien}, semua paket di ${mua} sudah include *skin preparation premium* dan *free retouch* agar makeup tahan seharian di hari bahagia Kakak 💕\n\nKira-kira paket nomor berapa yang sesuai dengan konsep impian ${klien}?`;
+    } 
+    else if (skenario === 'followup') {
+      teks = `Halo ${klien}! Selamat pagi ✨\n\nHanya mau menginfokan, untuk tanggal ${acara} kebetulan ada calon pengantin lain yang juga menanyakan tanggal tersebut 🥺\n\nKarena slot MUA kami sangat terbatas, Siti mau konfirmasi dulu ke ${klien}. Apakah jadinya mau amankan slotnya sekarang agar tidak terisi oleh pengantin lain? 😊`;
+    } 
+    else if (skenario === 'tawar') {
+      teks = `Halo ${klien}! 😊\n\nSiti sangat paham kalau persiapan wedding memang membutuhkan banyak pertimbangan budget.\n\nHarga yang ${mua} berikan sudah standar kualitas produk original/premium & ketahanan makeup hingga 12 jam Kak. Namun kalau budget ${klien} agak terbatas, Siti bisa bantu sesuaikan paketnya (misal tanpa aksesoris/retouch) agar masuk ke budget Kakak.\n\nKira-kira budget ideal ${klien} di angka berapa ya? Biar Siti bantu solusinya ✨`;
+    } 
+    else if (skenario === 'booking') {
+      teks = `Wah alhamdulillah! Terima kasih banyak ${klien} sudah memercayakan hari bahagianya bersama ${mua} ✨\n\nUntuk mengamankan slot tanggal ${acara}, ${klien} bisa melakukan booking via DP (Uang Muka) sebesar Rp 500.000 ke rekening berikut:\n\nBCA: 1234567890 a.n [Nama MUA]\n\nJika sudah transfer, mohon kirimkan bukti foto transfernya ya Kak agar jadwal resmi dikunci di kalender kami 🙏✨`;
+    }
+
+    document.getElementById('scriptBox').textContent = teks;
+  }
+
+  function copyText() {
+    const teks = document.getElementById('scriptBox').textContent;
+    navigator.clipboard.writeText(teks).then(() => {
+      const toast = document.getElementById('toastMsg');
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 2500);
+    });
+  }
+
+  // Initial call
+  updateScript();
+</script>
+</body>
+</html>
